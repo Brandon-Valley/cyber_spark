@@ -2,9 +2,16 @@ from test.test_bigmem import ascii_char_size
 import math
 
 def get_num_digits_per_byte(base):
-    log2 = math.log(256, base)
-    log2 = math.log2(256)
-    return log2
+    log1 = math.log10(base)
+    log2 = math.log10(256)
+    a = log1 / log2
+    b_float = 1 / a
+    b_rounded_up = math.ceil(b_float)
+    return b_rounded_up
+    
+    
+#     log2 = math.log(256, base)
+#     log2 = math.log2(256)
 
 
 def group_into_bytes(num_str, digits_per_byte):
@@ -47,7 +54,7 @@ def convert_to_decimal_bytes(og_bytes_list, base):
         
     return new_bytes_list
         
-
+# ASCII_NUM_CHARS = 'fedcba'
 
 def convert_byte(old_byte, base):
     rev_old_byte = rev_str(old_byte)
@@ -79,31 +86,12 @@ def read_text_file(file_path):
         return result
     
 def format_data(data):
-#     print('in format_data')
     formatted_data = ''
     
-#     print( len(data) )#````````````````````````````````````````````````````````````````````````````````````````
-    
     try:
-        for data_line_num in range( len(data) ):
-#             formatted_data += ' '#```````````````````````````````````````````````````````````````````````````````````````
-#             print(data_line_num)#````````````````````````````````````````````````````````````````````````````
-#             print('trying to add: %s/////////' %(data[data_line_num]) )#````````````````````````````````````````````````````````````
-            
-            
-#             if ' ' in data_line:
-#                 print('stop')
-#                 while(True):
-#                     print('terminate window!!!')
-#                     pass
-                
+        for data_line_num in range( len(data) ):                
             formatted_data += data[data_line_num]
-#             print(formatted_data)#``````````````````````````````````````````````````````````````````````````````````````````````
-#             if data_line[0] == ' ' or formatted_data == '':
-#                 formatted_data += data_line
-#             else:
-#                 formatted_data += ' ' + data_line\
-#             print ('still running')#```````````````````````````````````````````````````````````````````````````````````````
+
         return formatted_data
     except:
         raise Exception('ERROR  You probably have some extra lines of spaces in your data text file')
@@ -121,22 +109,6 @@ def write_text_file(file_path, line_list):
     # cleanup
     f.close()
     
-    
-# def string_to_list(long_str, chars_per_line):
-#     str_list = []
-#     line_str = ''
-#     
-#     for char in long_str:
-#         line_str += char
-#                 
-#         if len(line_str) == chars_per_line:
-#             str_list.append(line_str)
-#             line_str = ''
-#     
-#     if len(line_str) != 0:
-#         str_list.append(line_str)
-#         
-#     return str_list
 
 
 def decimal_bytes_to_ascii_chars(dec_bytes_list):
@@ -171,39 +143,6 @@ def print_ascii_str(ascii_str):
     print(final_str)
     
     return output_list
-        
-    
-    
-    
-    
-
-    
-# def long_int_to_ascii_str(long_int):
-#     long_int_str = str(long_int)
-#     long_int_str_list = string_to_list(long_int_str, 3)
-#     
-#     ascii_str = ''
-#     
-#     for dec_char_digits in long_int_str_list:
-#         int_digits = int(dec_char_digits)
-#         print(int_digits)
-#         ascii_char = chr(int_digits)
-#         encoded_ascii_char = ascii_char.encode("utf-8")
-#         print('   ', encoded_ascii_char)
-#         print(type(bytes_to_int(encoded_ascii_char)))#`````````````````````````````````````````````````````````````````````````````````````
-#         ascii_str += str( encoded_ascii_char )
-#         
-#     return ascii_str#.encode("utf-8")
-# 
-# 
-# def bytes_to_int(bytes):
-#     result = 0
-# 
-#     for b in bytes:
-#         result = result * 256 + int(b)
-# 
-#     return result
-
 
 
   
@@ -213,7 +152,7 @@ def print_ascii_str(ascii_str):
 # test_byte = convert_byte(test_group
 
 
-base = 3
+base = 9
   
         
 INPUT_FILENAME =  'input.txt'
