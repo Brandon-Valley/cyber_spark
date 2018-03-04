@@ -1,15 +1,43 @@
 from test.test_bigmem import ascii_char_size
 import math
 
-    #2301 base 5 = 326
-def convert_to_base_10(num_str, base):
-    digits_per_byte = get_num_digits_per_byte(base)
+def get_num_digits_per_byte(base):
+    log2 = math.log(256, base)
+    log2 = math.log2(256)
+    return log2
+
+
+def group_into_bytes(num_str, digits_per_byte):
+#     digits_per_byte = get_num_digits_per_byte(base)#````````````````````````````````````````````````````````````````
     
-#     num_str = format_data(num_str_list)#```````````````````````````````````````````````````````````
     rev_num_str = rev_str(num_str)
+    bytes_list = []
+    byte_str = ''
     
-    og_bytes_list = group_into_bytes(num_str, digits_per_byte)
-    print(og_bytes_list)
+    for digit in rev_num_str:
+        byte_str = digit + byte_str
+        
+        if len(byte_str) == digits_per_byte:
+            bytes_list.insert(0, byte_str)
+            byte_str = ''
+    
+    #if last (first) byte ends up not being the perfect length, fill with 0's until it is
+    if byte_str != '':
+        while(len(byte_str) != digits_per_byte):
+#             print('%s isnt long enough, adding 0s' %(byte_str))#``````````````````````````````````````````
+            byte_str = '0' + byte_str
+#             print('  byte_str: ', byte_str)#`````````````````````````````````````````````````````````````````````````
+        bytes_list.insert(0, byte_str)
+        
+    return bytes_list
+
+    #2301 base 5 = 326
+def convert_to_decimal_bytes(og_bytes_list, base):
+#     num_str = format_data(num_str_list)#```````````````````````````````````````````````````````````
+#     rev_num_str = rev_str(num_str)#``````````````````````````````````````````````````````
+    
+#     og_bytes_list = group_into_bytes(num_str, digits_per_byte)
+#     print(og_bytes_list)
     
     new_bytes_list = []
     
@@ -35,35 +63,8 @@ def convert_byte(old_byte, base):
         new_byte_int += decimal_equiv
         
     return str(new_byte_int)
+   
 
-def group_into_bytes(num_str, digits_per_byte):
-    rev_num_str = rev_str(num_str)
-    bytes_list = []
-    byte_str = ''
-    
-    for digit in rev_num_str:
-        byte_str = digit + byte_str
-        
-        if len(byte_str) == digits_per_byte:
-            bytes_list.insert(0, byte_str)
-            byte_str = ''
-    
-    #if last (first) byte ends up not being the perfect length, fill with 0's until it is
-    if byte_str != '':
-        while(len(byte_str) != digits_per_byte):
-#             print('%s isnt long enough, adding 0s' %(byte_str))#``````````````````````````````````````````
-            byte_str = '0' + byte_str
-#             print('  byte_str: ', byte_str)#`````````````````````````````````````````````````````````````````````````
-        bytes_list.insert(0, byte_str)
-        
-    return bytes_list
-    
-    
-
-def get_num_digits_per_byte(base):
-    log2 = math.log(256, base)
-    log2 = math.log2(256)
-    return int(log2)
 
 def rev_str(og_str):
     new_str = ''
@@ -202,58 +203,42 @@ def print_ascii_str(ascii_str):
 #         result = result * 256 + int(b)
 # 
 #     return result
+
+
+
   
-  
+# test_str = '0111101111011000100000100'
+# 
+# test_group_bytes = group_into_bytes(test_str, 8)
+# test_byte = convert_byte(test_group
+
+
+base = 3
   
         
 INPUT_FILENAME =  'input.txt'
 OUTPUT_FILENAME = 'output.txt'
 NUM_DIGITS_PER_OUTPUT_LINE = 10
 
-base = 2
 
-# test_str = '0111101111011000100000100'
-# 
-# test_group_bytes = group_into_bytes(test_str, 8)
-# test_byte = convert_byte(test_group
-
-    
-
-
-
- 
 input_num_str_list = read_text_file(INPUT_FILENAME)
 input_num_str = format_data(input_num_str_list)
-# print(q_num_str)
-# f_q_num_str = format_data(q_num_str)
-# print('out of formatted data')
+
+print('base:', base)
  
-# print(q_num_str)
+digits_per_byte = get_num_digits_per_byte(base) 
+print('digits_per_byte:', digits_per_byte)
  
-# for digit in str(f_q_num_str):
-#     print(digit)
+grouped_bytes = group_into_bytes(input_num_str, digits_per_byte) 
+print('grouped_bytes:', grouped_bytes)
  
- 
-decimal_bytes = convert_to_base_10(input_num_str, base)
+decimal_bytes = convert_to_decimal_bytes(grouped_bytes, base)
 print('decimal_bytes:', decimal_bytes)
 
 ascii_chars = decimal_bytes_to_ascii_chars(decimal_bytes)#print this for debugging
 print('ascii_chars:', ascii_chars)
 
 ascii_string = list_to_str(ascii_chars)#dont print this for debugging, gets weird because of \n's
-
-# # converted_num_str = str(converted_num)
-# ascii_str = long_int_to_ascii_str(converted_num)
-#  
-# # for digit in str(converted_num):
-# #     print(digit)
-#   
-# print(ascii_str[2])
-# print(type(ascii_str[2])) 
-#   
-#   
-# output_list = string_to_list(ascii_str, NUM_DIGITS_PER_OUTPUT_LINE)
-# print(output_list[0])
 
 print_ascii_str(ascii_string)
 # print('output_list:', output_list)
