@@ -1,5 +1,7 @@
 char = 'a'
-print(ors(char))
+print(ord(char))
+
+print(chr(7))
 
                   
             

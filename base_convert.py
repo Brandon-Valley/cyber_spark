@@ -6,8 +6,8 @@ def get_num_digits_per_byte(base):
     log2 = math.log10(256)
     a = log1 / log2
     b_float = 1 / a
-    b_rounded_up = math.ceil(b_float)
-    return b_rounded_up
+    b_rounded = math.ceil(b_float)
+    return b_rounded
     
     
 #     log2 = math.log(256, base)
@@ -49,27 +49,41 @@ def convert_to_decimal_bytes(og_bytes_list, base):
     new_bytes_list = []
     
     for og_byte in og_bytes_list:
-        new_byte = convert_byte(og_byte, base)
+        new_byte = convert_byte_to_decimal(og_byte, base)
         new_bytes_list.append(new_byte)#.insert(0, new_byte)
         
     return new_bytes_list
         
 # ASCII_NUM_CHARS = 'fedcba'
 
-def convert_byte(old_byte, base):
+def convert_byte_to_decimal(old_byte, base):
     rev_old_byte = rev_str(old_byte)
     new_byte_int = 0
     
     for digit_pos in range( len(rev_old_byte) ):
         digit_char = rev_old_byte[digit_pos]
-        digit_int = int( digit_char )
         
-    #         print('digit_pos: %s   digit_int: %s' %(digit_pos , digit_int))
+        #if numeric
+        if digit_char.isdigit():
+            digit_int = int( digit_char )
+        else:
+            digit_int = get_alpha_int_value(digit_char)
+            
+#         print('digit_pos: %s   digit_int: %s' %(digit_pos , digit_int))
         decimal_equiv = digit_int * base**digit_pos
-#         print('base %s,  og digit: %s decimal_equiv:  %s' %(base, digit_char, decimal_equiv ))
+        print('decimal_equiv = digit_int * base ^ digit_pos   %s   %s = %s * %s ^ %s' %(digit_char, decimal_equiv, digit_int, base, digit_pos) )
+#         print('base %s,  og digit: %s  digit_int: %s  decimal_equiv:  %s' %(base, digit_char, digit_int, decimal_equiv ))
         new_byte_int += decimal_equiv
         
     return str(new_byte_int)
+
+
+def get_alpha_int_value(digit_char):
+    ascii_start = ord('a')
+    digit_ascii = ord(digit_char)
+    diff = digit_ascii - ascii_start
+    digit_int = 10 + diff
+    return digit_int
    
 
 
@@ -152,7 +166,7 @@ def print_ascii_str(ascii_str):
 # test_byte = convert_byte(test_group
 
 
-base = 9
+base = 31
   
         
 INPUT_FILENAME =  'input.txt'
@@ -169,9 +183,10 @@ digits_per_byte = get_num_digits_per_byte(base)
 print('digits_per_byte:', digits_per_byte)
  
 grouped_bytes = group_into_bytes(input_num_str, digits_per_byte) 
-print('grouped_bytes:', grouped_bytes)
+# print('grouped_bytes:', grouped_bytes)
  
 decimal_bytes = convert_to_decimal_bytes(grouped_bytes, base)
+print('grouped_bytes:', grouped_bytes)
 print('decimal_bytes:', decimal_bytes)
 
 ascii_chars = decimal_bytes_to_ascii_chars(decimal_bytes)#print this for debugging
